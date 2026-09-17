@@ -4,23 +4,24 @@ import starlight from '@astrojs/starlight';
 
 // https://astro.build/config
 export default defineConfig({
-	integrations: [
-		starlight({
-			title: 'My Docs',
-			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/withastro/starlight' }],
-			sidebar: [
-				{
-					label: 'Guides',
-					items: [
-						// Each item here is one entry in the navigation menu.
-						{ label: 'Example Guide', slug: 'guides/example' },
-					],
-				},
-				{
-					label: 'Reference',
-					items: [{ autogenerate: { directory: 'reference' } }],
-				},
-			],
-		}),
-	],
+  integrations: [
+    starlight({
+      title: 'FE Study Archive',
+      // social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/withastro/starlight' }],
+      sidebar: [
+        {
+          label: '시작하기',
+          items: [
+            // Each item here is one entry in the navigation menu.
+            { label: '스터디 소개', slug: 'guides/about' },
+          ],
+        },
+        {
+          label: '스터디 회차',
+          items: [{ autogenerate: { directory: 'sessions', collapsed: true } }],
+        },
+      ],
+      lastUpdated: false,
+    }),
+  ],
 });
