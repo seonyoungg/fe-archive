@@ -1,0 +1,55 @@
+# FE Study 주제 목록
+#
+# id          : 발표 기록 frontmatter의 topics에 적는 값. URL(/topics/<id>/)에도 쓰입니다.
+#               영문 소문자, 숫자, 하이픈(-)만 사용합니다. 한 번 정하면 바꾸지 않습니다.
+# name        : 사이트에 표시되는 이름 (공식 표기)
+# description : 주제 페이지 상단에 보여줄 한 줄 설명
+
+- id: react
+  name: React
+  description: 컴포넌트, 훅, 렌더링 모델 등 React 전반
+- id: nextjs
+  name: Next.js
+  description: 라우팅, 렌더링 전략, 캐시 등 Next.js 전반
+- id: astro
+  name: Astro
+  description: Islands, 콘텐츠 컬렉션, 정적 사이트 생성 등 Astro 전반
+- id: typescript
+  name: TypeScript
+  description: 타입 시스템과 타입 설계
+- id: javascript
+  name: JavaScript
+  description: 언어 명세, 런타임 동작, 최신 문법
+- id: browser
+  name: Browser
+  description: 렌더링 과정, 이벤트 루프, 브라우저 API
+- id: web-performance
+  name: Web Performance
+  description: 로딩, 렌더링, 번들 최적화와 성능 측정
+- id: css
+  name: CSS
+  description: 레이아웃, 스타일링 방식, 최신 CSS 기능
+- id: testing
+  name: Testing
+  description: 단위, 통합, E2E 테스트와 테스트 전략
+- id: accessibility
+  name: Accessibility
+  description: 웹 접근성 원칙과 구현 방법
+- id: architecture
+  name: Architecture
+  description: 프론트엔드 설계, 폴더 구조, 모듈 경계
+- id: state-management
+  name: State Management
+  description: 클라이언트 상태와 서버 상태 관리
+- id: ai
+  name: AI
+  description: AI 도구 활용과 AI 기능 구현
+- id: devops
+  name: DevOps
+  description: 빌드, 배포, CI/CD, 인프라
+- id: extra
+  name: 기타
+  description: 위 주제에 포함되지 않는 발표 주제
+# extra는 맞는 주제가 없을 때만, 다른 주제 없이 단독으로 사용합니다.
+# 같은 분야의 발표가 extra에 3번 쌓이면 새 주제로 추가하고, 해당 발표의 topics를 옮겨 주세요.
+# 예: Security, Design System, GraphQL 등

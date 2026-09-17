@@ -1,0 +1,28 @@
+# FE Study 멤버 목록 (Phase 2에서 src/data/members.yaml 로 사용)
+#
+# id   : 발표 기록 frontmatter의 speaker에 적는 값. 한 번 정하면 바꾸지 않습니다.
+#        영문 소문자, 숫자, 하이픈(-)만 사용합니다. URL(/members/<id>/)에도 쓰입니다.
+# name : 사이트에 표시되는 이름. 공개 범위는 스터디에서 정한 대로 채웁니다.
+
+- id: sy-park
+  name: 박선영
+- id: yj-choi
+  name: 최영준
+- id: yh-kim
+  name: 김연호
+- id: sk-choi
+  name: 최승균
+- id: sw-yoo
+  name: 유시원
+- id: jy-im
+  name: 임지윤
+- id: yj-j
+  name: 정유진
+- id: sy-koo
+  name: 구성연
+- id: si-moon
+  name: 문서인
+- id: hs-jo
+  name: 조현수
+- id: ws-closer
+  name: 정원식
