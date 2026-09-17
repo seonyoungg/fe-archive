@@ -12,7 +12,7 @@ export default defineConfig({
         {
           label: '시작하기',
           items: [
-            // Each item here is one entry in the navigation menu.
+            { label: 'Archive 이해하기', slug: 'guides' },
             { label: '스터디 소개', slug: 'guides/about' },
           ],
         },
