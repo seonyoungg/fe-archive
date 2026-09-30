@@ -22,6 +22,10 @@ export const collections = {
 			}),
 		}),
 	}),
+	members: defineCollection({
+		loader: file('src/data/Members.yaml'),
+		schema: z.object({ id: z.string(), name: z.string() }),
+	}),
 	topics: defineCollection({
 		loader: file('src/data/Topics.yaml'),
 		schema: z.object({ id: z.string(), name: z.string(), description: z.string() }),

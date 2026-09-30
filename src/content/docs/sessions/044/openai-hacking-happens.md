@@ -4,6 +4,7 @@ description: 7월 21일 OpenAI 능력 평가 중 발생한 해킹 사고에 대�
 lastUpdated: 2026-08-06
 presentation:
   session: 44
+  part: 2
   date: 2026-08-06
   speaker: sk-choi
   topics: [AI]

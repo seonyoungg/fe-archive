@@ -16,6 +16,7 @@ export default defineConfig({
             { label: '스터디 소개', slug: 'guides/about' },
           ],
         },
+        { label: '발표 목록', link: '/archive/' },
         {
           label: '스터디 회차',
           items: [{ autogenerate: { directory: 'sessions', collapsed: true } }],

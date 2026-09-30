@@ -1,0 +1,246 @@
+---
+import { getCollection } from 'astro:content';
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+
+const [docs, members, topics] = await Promise.all([
+	getCollection('docs'),
+	getCollection('members'),
+	getCollection('topics'),
+]);
+
+const presentations = docs
+	.filter((entry) => entry.data.presentation)
+	.sort((a, b) =>
+		b.data.presentation!.session - a.data.presentation!.session ||
+		a.data.presentation!.part - b.data.presentation!.part,
+	);
+const memberNames = new Map(members.map(({ data }) => [data.id, data.name]));
+const topicNames = new Map(topics.map(({ data }) => [data.id, data.name]));
+const speakers = [...new Set(presentations.map((entry) => entry.data.presentation!.speaker))].sort();
+const usedTopics = [...new Set(presentations.flatMap((entry) => entry.data.presentation!.topics))].sort();
+const tags = [...new Set(presentations.flatMap((entry) => entry.data.presentation!.tags))].sort();
+const sessions = [...new Set(presentations.map((entry) => entry.data.presentation!.session))].sort(
+	(a, b) => b - a,
+);
+
+function formatDate(date: Date) {
+	return new Intl.DateTimeFormat('en-US', {
+		year: 'numeric',
+		month: 'short',
+		day: 'numeric',
+	}).format(date);
+}
+
+function formatSession(session: number, part: number) {
+	return `${session}-${part}`;
+}
+---
+
+
+<StarlightPage
+	frontmatter={{
+		title: '발표 목록',
+		description: '회차별 발표 기록을 한곳에서 찾습니다.',
+		tableOfContents: false,
+	}}
+>
+	<section class="archive" aria-labelledby="archive-heading">
+		<div class="archive-heading">
+			<p id="archive-heading">총 <strong>{presentations.length}</strong>개의 발표</p>
+			<p id="result-count" aria-live="polite"></p>
+		</div>
+
+		<div class="filters" aria-label="발표 필터">
+			<label class="search">
+				<span>검색</span>
+				<input id="archive-query" type="search" placeholder="제목, 발표자, 주제, 태그 검색" />
+			</label>
+			<label>
+				<span>주제</span>
+				<select id="topic-filter">
+					<option value="">전체</option>
+					{usedTopics.map((topic) => <option value={topic}>{topicNames.get(topic) ?? topic}</option>)}
+				</select>
+			</label>
+			<label>
+				<span>태그</span>
+				<select id="tag-filter">
+					<option value="">전체</option>
+					{tags.map((tag) => <option value={tag}>{tag}</option>)}
+				</select>
+			</label>
+			<label>
+				<span>발표자</span>
+				<select id="speaker-filter">
+					<option value="">전체</option>
+					{speakers.map((speaker) => <option value={speaker}>{memberNames.get(speaker) ?? speaker}</option>)}
+				</select>
+			</label>
+			<label>
+				<span>회차</span>
+				<select id="session-filter">
+					<option value="">전체</option>
+					{sessions.map((session) => <option value={session}>{session}회차</option>)}
+				</select>
+			</label>
+			<button id="reset-filters" type="button">초기화</button>
+		</div>
+
+		<div class="table-scroll">
+			<table style="width: 100%">
+				<colgroup>
+					<col class="title-column" />
+					<col class="speaker-column" />
+					<col class="session-column" />
+					<col class="date-column" />
+				</colgroup>
+				<thead>
+					<tr>
+						<th scope="col">제목</th>
+						<th scope="col">발표자</th>
+						<th scope="col">회차</th>
+						<th scope="col">발표 일시</th>
+					</tr>
+				</thead>
+				<tbody id="presentation-list">
+					{presentations.map((entry) => {
+						const presentation = entry.data.presentation!;
+						const speaker = memberNames.get(presentation.speaker) ?? presentation.speaker;
+						const topicLabels = presentation.topics.map((topic) => topicNames.get(topic) ?? topic);
+						const sessionLabel = formatSession(presentation.session, presentation.part);
+						const searchText = [
+							entry.data.title,
+							entry.data.description,
+							speaker,
+							...topicLabels,
+							...presentation.tags,
+							sessionLabel,
+						]
+							.join(' ')
+							.toLocaleLowerCase();
+
+						return (
+							<tr
+								data-presentation-row
+								data-search={searchText}
+								data-speaker={presentation.speaker}
+								data-session={presentation.session}
+								data-topics={JSON.stringify(presentation.topics)}
+								data-tags={JSON.stringify(presentation.tags)}
+							>
+								<td class="title"><a class="title-link" href={`/${entry.id}/`}><span>{entry.data.title}</span></a></td>
+								<td>{speaker}</td>
+								<th class="session" scope="row">{sessionLabel}</th>
+								<td class="date"><time datetime={presentation.date.toISOString()}>{formatDate(presentation.date)}</time></td>
+							</tr>
+						);
+					})}
+				</tbody>
+			</table>
+		</div>
+		<p id="empty-message" hidden>조건에 맞는 발표가 없습니다.</p>
+	</section>
+</StarlightPage>
+
+<script>
+	const rows = [...document.querySelectorAll<HTMLTableRowElement>('[data-presentation-row]')];
+	const query = document.querySelector<HTMLInputElement>('#archive-query')!;
+	const topic = document.querySelector<HTMLSelectElement>('#topic-filter')!;
+	const tag = document.querySelector<HTMLSelectElement>('#tag-filter')!;
+	const speaker = document.querySelector<HTMLSelectElement>('#speaker-filter')!;
+	const session = document.querySelector<HTMLSelectElement>('#session-filter')!;
+	const resultCount = document.querySelector<HTMLElement>('#result-count')!;
+	const emptyMessage = document.querySelector<HTMLElement>('#empty-message')!;
+	const titleLinks = [...document.querySelectorAll<HTMLAnchorElement>('.title-link')];
+
+	function updateTitleAnimation() {
+		for (const link of titleLinks) {
+			const text = link.querySelector<HTMLSpanElement>('span');
+			if (!text) continue;
+			link.removeAttribute('data-overflow');
+			const distance = text.scrollWidth - link.clientWidth;
+			if (distance <= 1) continue;
+			link.dataset.overflow = 'true';
+			link.style.setProperty('--title-scroll-distance', `${distance}px`);
+			link.style.setProperty('--title-scroll-duration', `${Math.max(4, distance / 20)}s`);
+		}
+	}
+
+	function hasValue(values: string | undefined, value: string) {
+		return !value || JSON.parse(values ?? '[]').includes(value);
+	}
+
+	function filterPresentations() {
+		const search = query.value.trim().toLocaleLowerCase();
+		let count = 0;
+
+		for (const row of rows) {
+			const matches =
+				(!search || row.dataset.search?.includes(search)) &&
+				hasValue(row.dataset.topics, topic.value) &&
+				hasValue(row.dataset.tags, tag.value) &&
+				(!speaker.value || row.dataset.speaker === speaker.value) &&
+				(!session.value || row.dataset.session === session.value);
+			row.hidden = !matches;
+			if (matches) count += 1;
+		}
+
+		resultCount.textContent = `검색 결과 ${count}개`;
+		emptyMessage.hidden = count !== 0;
+	}
+
+	for (const control of [query, topic, tag, speaker, session]) {
+		control.addEventListener('input', filterPresentations);
+		control.addEventListener('change', filterPresentations);
+	}
+
+	document.querySelector('#reset-filters')?.addEventListener('click', () => {
+		query.value = '';
+		topic.value = '';
+		tag.value = '';
+		speaker.value = '';
+		session.value = '';
+		filterPresentations();
+	});
+
+	filterPresentations();
+	updateTitleAnimation();
+	window.addEventListener('resize', updateTitleAnimation);
+</script>
+
+<style>
+	.archive-heading { display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; }
+	.archive { max-width: 72rem; margin-inline: auto; }
+	.filters { display: flex; flex-wrap: wrap; align-items: end; gap: 0.75rem; margin: 1.5rem 0; }
+	.filters label { display: grid; flex: 1 1 8rem; gap: 0.3rem; font-size: 0.875rem; }
+	.filters .search { flex-basis: 18rem; }
+	.filters input, .filters select, .filters button { min-height: 2.5rem; border: 1px solid var(--sl-color-gray-5); border-radius: 0.4rem; background: var(--sl-color-bg); color: var(--sl-color-text); padding: 0.45rem 0.6rem; }
+	.filters button { flex: 0 0 auto; cursor: pointer; }
+	.table-scroll { overflow-x: auto; }
+	table { width: 100%; min-width: 65.5rem; border-collapse: collapse; table-layout: fixed; }
+	.title-column { width: 40rem; }
+	.speaker-column { width: 8rem; }
+	.session-column { width: 6.5rem; }
+	.date-column { width: 11rem; }
+	th, td { border-bottom: 1px solid var(--sl-color-gray-5); padding: 0.85rem 1rem; text-align: left; vertical-align: middle; }
+	thead { border-block: 1px solid var(--sl-color-gray-5); }
+	thead th { color: var(--sl-color-gray-2); font-weight: 600; white-space: nowrap; }
+	.session { font-weight: 700; white-space: nowrap; }
+	.date { color: var(--sl-color-gray-2); white-space: nowrap; }
+	.title { overflow: hidden; }
+	.title-link { display: block; overflow: hidden; color: var(--sl-color-text); font-weight: 600; text-decoration: none; white-space: nowrap; }
+	.title-link span { display: inline-block; }
+	.title-link:hover { color: var(--sl-color-accent-high); }
+	.title-link[data-overflow='true'] span { animation: title-marquee var(--title-scroll-duration) ease-in-out 1s infinite alternate; }
+	@keyframes title-marquee { to { transform: translateX(calc(-1 * var(--title-scroll-distance))); } }
+	@media (prefers-reduced-motion: reduce) { .title-link[data-overflow='true'] span { animation: none; } }
+	@media (max-width: 40rem) { .archive-heading { display: block; } .filters label, .filters .search { flex-basis: 100%; } }
+</style>
+
+<style is:global>
+	html[data-has-sidebar] main .sl-container { max-width: 72rem; }
+
+	@media (min-width: 72rem) {
+		html[data-has-sidebar] main .content-panel { padding-inline: 0.75rem; }
+	}
+</style>
