@@ -69,6 +69,7 @@ title: FE Study Archive 구축
 description: 노션으로 쌓아온 스터디 기록을 Git + Markdown + Astro로 직접 아카이브해보기
 presentation:
   session: 49
+  part: 1
   date: 2026-09-17
   speaker: sy-park
   topics: [astro]
@@ -82,6 +83,7 @@ presentation:
 | `description`  | 한 문장 요약. 검색 결과와 링크 미리보기에 쓰입니다            |
 | `presentation` | 아래 항목은 **반드시 두 칸 들여쓰기**                         |
 | `session`      | 숫자. **폴더와 달리 0을 붙이지 않습니다** (`049` 아니고 `49`) |
+| `part`         | 발표 순서. 첫 발표는 `1`, 두 번째 발표는 `2`                 |
 | `date`         | `YYYY-MM-DD` 형식                                             |
 | `speaker`      | `src/data/members.yaml`에 있는 멤버 ID                        |
 | `topics`       | `src/data/topics.yaml`에 있는 주제 ID. 1~3개                  |
@@ -89,6 +91,19 @@ presentation:
 
 - `tags` 표기 예시: `React`, `TypeScript`, `Next.js`, `CSS`
   (`react`, `타입스크립트`, `nextjs`처럼 섞어 쓰지 않습니다)
+
+### 주제와 태그 표시
+
+발표 페이지의 맨 아래에는 frontmatter에 적은 주제와 태그가 둥근 라벨로 자동 표시됩니다.
+따라서 본문에 주제·태그 라벨을 따로 작성하지 않습니다.
+
+### 마지막 업데이트 날짜
+
+발표 기록의 마지막 업데이트 날짜는 해당 파일의 **가장 최근 Git 커밋 시간**으로 자동 표시됩니다.
+수정한 적이 없는 글에서는 최초 작성 커밋 시간이 곧 마지막 업데이트 날짜입니다.
+따라서 새 발표 기록에는 날짜를 쓰지 않아도 됩니다.
+
+커밋 시간과 다른 날짜를 표시해야 할 때만 frontmatter 최상단에 `lastUpdated`를 직접 적습니다.(가이드 추가 예정)
 
 ---
 

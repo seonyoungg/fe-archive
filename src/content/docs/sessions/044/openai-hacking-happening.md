@@ -7,8 +7,8 @@ presentation:
   part: 2
   date: 2026-08-06
   speaker: sk-choi
-  topics: [AI]
-  tags: [hugging_face, ai, openai, jfrog]
+  topics: [ai]
+  tags: [Hugging Face, AI, OpenAI, JFrog]
 ---
 
 ## Hugging Face
