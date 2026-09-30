@@ -1,6 +1,7 @@
 ---
 title: 제로데이 취약점 찾아서 해킹했더니 사람들 난리 난 썰
 description: 7월 21일 OpenAI 능력 평가 중 발생한 해킹 사고에 대한 설명
+lastUpdated: 2026-08-06
 presentation:
   session: 44
   date: 2026-08-06

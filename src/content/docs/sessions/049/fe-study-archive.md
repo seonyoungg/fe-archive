@@ -1,6 +1,7 @@
 ---
 title: FE Study Archive 구축
 description: 노션으로 쌓아온 스터디 기록을 Git + Markdown + Astro로 직접 아카이브해보기
+lastUpdated: 2026-09-17
 presentation:
   session: 49
   date: 2026-09-17

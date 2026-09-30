@@ -21,7 +21,7 @@ export default defineConfig({
           items: [{ autogenerate: { directory: 'sessions', collapsed: true } }],
         },
       ],
-      lastUpdated: false,
+      lastUpdated: true,
     }),
   ],
 });
