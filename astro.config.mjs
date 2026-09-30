@@ -22,6 +22,9 @@ export default defineConfig({
         },
       ],
       lastUpdated: true,
+      components: {
+        Footer: './src/components/PresentationFooter.astro',
+      },
     }),
   ],
 });

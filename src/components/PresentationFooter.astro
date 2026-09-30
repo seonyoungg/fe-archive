@@ -1,0 +1,39 @@
+---
+import { getCollection } from 'astro:content';
+import Footer from '@astrojs/starlight/components/Footer.astro';
+
+const { entry } = Astro.locals.starlightRoute;
+const presentation = entry.data.presentation;
+const topicNames = presentation
+	? new Map((await getCollection('topics')).map(({ data }) => [data.id, data.name]))
+	: new Map<string, string>();
+const topicLabels = presentation?.topics.map((topic) => topicNames.get(topic) ?? topic) ?? [];
+---
+
+{
+	presentation && (
+		<section class="presentation-metadata" aria-label="발표 주제 및 태그">
+			<div>
+				<strong>주제</strong>
+				<div class="labels">
+					{topicLabels.map((topic) => <span class="label topic">{topic}</span>)}
+				</div>
+			</div>
+			<div>
+				<strong>태그</strong>
+				<div class="labels">
+					{presentation.tags.map((tag) => <span class="label tag">{tag}</span>)}
+				</div>
+			</div>
+		</section>
+	)
+}
+
+<Footer />
+
+<style>
+	.presentation-metadata { display: grid; gap: 1rem; margin-top: 3rem; }
+	.labels { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.45rem; }
+	.label { border: 1px solid var(--sl-color-gray-4); border-radius: 999px; padding: 0.15rem 0.55rem; background: var(--sl-color-gray-6); color: var(--sl-color-white); font-size: var(--sl-text-sm); }
+	.topic { border-color: var(--sl-color-accent); background: var(--sl-color-accent-low); color: var(--sl-color-accent-high); }
+</style>
