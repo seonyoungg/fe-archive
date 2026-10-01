@@ -95,3 +95,9 @@ flowchart LR
 | 동시 삽입 순서 | 서버 변환 정책 | 같은 경계의 원소 ID 규칙 |
 | 삭제 | 문서 문자열에서 제거 | tombstone으로 관계 유지 후 화면에서 숨김 |
 | 공통 결과 | 모든 참여자의 문서 수렴 | 모든 참여자의 문서 수렴 |
+
+## **OT와 CRDT 구현 (with WebSocket)**
+[OT 설명 및 구현 레포](https://github.com/seuchoi0531/same-time-editing-ot)
+[CRDT 설명 및 구현 레포](https://github.com/seuchoi0531/same-time-editing-crdt)
+[OT 구현 웹사이트](https://same-time-editing-ot.onrender.com)
+[CRDT 구현 웹사이트](https://same-time-editing-crdt.onrender.com)
