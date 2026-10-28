@@ -15,6 +15,10 @@ export default defineConfig({
   integrations: [
     starlight({
       title: 'FE Study Archive',
+      defaultLocale: 'root',
+      locales: {
+        root: { label: '한국어', lang: 'ko' },
+      },
       // social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/withastro/starlight' }],
       sidebar: [
         {
