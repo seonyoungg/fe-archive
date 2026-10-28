@@ -10,8 +10,12 @@ const sessionDirectories = readdirSync(new URL('./src/content/docs/sessions/', i
   .map((entry) => entry.name)
   .sort((a, b) => Number(b) - Number(a));
 
+// const site = process.env.URL ?? process.env.SITE_URL;
+const site = 'https://fe-archive.netlify.app';
+
 // https://astro.build/config
 export default defineConfig({
+  site,
   integrations: [
     starlight({
       title: 'FE Study Archive',
